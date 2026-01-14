@@ -1,0 +1,6 @@
+mkdir -p /home/shado/test_remote_backup
+mkdir -p /home/shado/logs_backup
+mkdir -p /home/shado/lib
+mkdir -p /home/shado/repos
+mkdir -p /srv
+
