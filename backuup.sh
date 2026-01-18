@@ -18,9 +18,10 @@ source "$CONFIG_FILE"
 # ARGUMENTS
 #######################################
 FORCE=0
+BACKUP_TYPE="snapshot"   # full | incr | snapshot
 
 usage() {
-    echo "Usage: $0 [-force|--force]"
+    echo "Usage: $0 [-force|--force] [-type full|incr|snapshot]"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -28,6 +29,10 @@ while [[ $# -gt 0 ]]; do
         -force|--force)
             FORCE=1
             shift
+            ;;
+        -type|--type)
+            BACKUP_TYPE="$2"
+            shift 2
             ;;
         -h|--help)
             usage
@@ -42,11 +47,28 @@ while [[ $# -gt 0 ]]; do
 done
 
 #######################################
+# VALIDATE BACKUP TYPE
+#######################################
+case "$BACKUP_TYPE" in
+    full|incr|snapshot) ;;
+    *)
+        echo "Invalid backup type: $BACKUP_TYPE"
+        usage
+        exit 1
+        ;;
+esac
+
+#######################################
+# TIME TAGS
+#######################################
+DATE_TAG="$(date '+%Y_%m_%d')"
+BACKUP_NAME="backup_${BACKUP_TYPE}_${DATE_TAG}"
+
+#######################################
 # LOGGING
 #######################################
-PERIOD_TAG="$(date '+%Y-%m')"
 mkdir -p "$LOG_PATH"
-LOG_FILE="${LOG_PATH}/${PERIOD_TAG}.log"
+LOG_FILE="${LOG_PATH}/${BACKUP_NAME}.log"
 
 step=0
 TOTAL_STEPS=14
@@ -91,7 +113,7 @@ check_disk_space() {
 # PREPARE STRUCTURE
 #######################################
 prepare_snapshot() {
-    SNAPSHOT_ROOT="${BACKUP_ROOT}/${CYCLE_NAME}_${PERIOD_TAG}/snapshot"
+    SNAPSHOT_ROOT="${BACKUP_ROOT}/${BACKUP_NAME}/snapshot"
     DIRS_BACKUP="${SNAPSHOT_ROOT}/dirs"
     REPOS_BACKUP="${SNAPSHOT_ROOT}/repos"
 
@@ -99,7 +121,7 @@ prepare_snapshot() {
 }
 
 #######################################
-# REMOTE CHECK (SSH ONLY)
+# REMOTE CHECK
 #######################################
 check_remote() {
     log "Checking SSH connectivity to remote host"
@@ -161,8 +183,9 @@ backup_dir() {
 #######################################
 process_input_dirs() {
     for ROOT in "${INPUT_DIRS[@]}"; do
-        if [[ ! -r "$ROOT" ]]; then
-            log_err "No permissions: $ROOT"
+
+        if [[ ! -x "$ROOT" ]]; then
+            log_err "No access (missing execute permission): $ROOT"
             continue
         fi
 
@@ -188,9 +211,10 @@ process_input_dirs() {
 # ARCHIVING
 #######################################
 archive_old() {
-    log "Archiving old snapshots"
-    find "$BACKUP_ROOT" -maxdepth 1 -type d -name "${CYCLE_NAME}_*" \
-        ! -name "${CYCLE_NAME}_${PERIOD_TAG}" | while read -r OLD; do
+    log "Archiving old backups"
+    find "$BACKUP_ROOT" -maxdepth 1 -type d -name "backup_*" \
+        ! -name "$BACKUP_NAME" | while read -r OLD; do
+
             local archive_name
             archive_name="$(basename "$OLD").tar.gz"
 
@@ -204,7 +228,7 @@ archive_old() {
 }
 
 create_current_archive() {
-    local name="${CYCLE_NAME}_${PERIOD_TAG}_snapshot.tar.gz"
+    local name="${BACKUP_NAME}.tar.gz"
 
     log "Creating archive of current snapshot"
     tar -czf "${WORK_TMP}/${name}" -C "$SNAPSHOT_ROOT" . >>"$LOG_FILE" 2>&1 \
@@ -247,15 +271,13 @@ push_remote() {
 #######################################
 # MAIN
 #######################################
-log "BACKUP START"
+log "BACKUP START (${BACKUP_TYPE})"
 acquire_lock
 check_disk_space "$BACKUP_ROOT"
 prepare_snapshot
 check_remote
 process_input_dirs
 archive_old
-
-[[ $FORCE -eq 1 ]] && create_current_archive
-
+create_current_archive
 push_remote
 log "BACKUP END"
