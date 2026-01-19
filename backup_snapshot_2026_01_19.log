@@ -1,0 +1,46 @@
+>> [1/14] 2026-01-19 10:40:30 BACKUP START (snapshot)
+>> [2/14] 2026-01-19 10:40:30 Checking SSH connectivity to remote host
+>> [3/14] 2026-01-19 10:40:32 Processing root directory: /etc
+>> [4/14] 2026-01-19 10:40:32 Syncing directory /etc
+rsync: [sender] opendir "/etc/credstore.encrypted" failed: Permission denied (13)
+rsync: [sender] opendir "/etc/credstore" failed: Permission denied (13)
+rsync: [sender] opendir "/etc/multipath" failed: Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/.pwd.lock": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/gshadow": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/gshadow-": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/shadow": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/shadow-": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/sudoers": Permission denied (13)
+rsync: [sender] opendir "/etc/polkit-1/rules.d" failed: Permission denied (13)
+rsync: [sender] opendir "/etc/ssl/private" failed: Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/default/cacerts": Permission denied (13)
+rsync: [sender] opendir "/etc/wireguard" failed: Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/fwupd/fwupd.conf": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/iscsi/initiatorname.iscsi": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/netplan/50-cloud-init.yaml": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/security/opasswd": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ssh/ssh_host_ecdsa_key": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ssh/ssh_host_ed25519_key": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ssh/ssh_host_rsa_key": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ssh/sshd_config.d/50-cloud-init.conf": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/sudoers.d/README": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/after.init": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/after.rules": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/after6.rules": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/before.init": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/before.rules": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/before6.rules": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/user.rules": Permission denied (13)
+rsync: [sender] send_files failed to open "/etc/ufw/user6.rules": Permission denied (13)
+rsync error: some files/attrs were not transferred (see previous errors) (code 23) at main.c(1338) [sender=3.2.7]
+>>! 2026-01-19 10:40:33 Dir copy warnings: /etc
+>> [5/14] 2026-01-19 10:40:33 Processing root directory: /home/seba/lib
+>> [6/14] 2026-01-19 10:40:33 Syncing directory /home/seba/lib
+>> [7/14] 2026-01-19 10:40:33 Processing root directory: /home/seba/repos
+>> [8/14] 2026-01-19 10:40:33 Syncing directory /home/seba/repos
+>> [9/14] 2026-01-19 10:40:33 Processing root directory: /srv
+>> [10/14] 2026-01-19 10:40:33 Syncing directory /srv
+>> [11/14] 2026-01-19 10:40:33 Archiving old backups
+>> [12/14] 2026-01-19 10:40:33 Creating archive of current snapshot
+>> [13/14] 2026-01-19 10:40:33 Remote push skipped (not due)
+>> [14/14] 2026-01-19 10:40:33 BACKUP END
